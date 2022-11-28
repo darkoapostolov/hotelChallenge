@@ -1,0 +1,44 @@
+<!--Add review form page-->
+<style>
+    #back {
+        margin-left: 2%;
+    }
+
+    .form {
+        padding: 20px;
+    }
+
+    .radio {
+        list-style: none;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div>
+            <form class="form" action="/review/addEdit" method="POST">
+                <!--some of these are hidden because they are needed for the post method-->
+                <input id="id" type="hidden" name="id" th:value="(${review} != null ? ${review.getId()} : '')">
+                <input name="user" id="user" th:value="${#request.getRemoteUser()}" type="hidden">
+                <label><b>Description</b></label>
+                <!--review description-->
+                <input id='description' class="form-control" type='text' name='description'
+                       th:value="(${review} != null ? ${review.getDescription()} : '')"/><br/>
+                <input id="hotelId" type="hidden" name="hotelId" th:value="${hotelId}">
+                <div class="form-group">
+                    <label><b>Rating</b></label>
+                    <!--possible ratings-->
+                    <ul class="radio">
+                        <li th:each="rating: ${ratings}"><input type="radio" name="rating" th:value="${rating}">
+                            <th:block th:text="${rating}"></th:block>
+                        </li>
+                    </ul>
+                    <br>
+                </div>
+                <input class="btn btn-primary" type='submit' name="submit" value='Post'/> <a class="btn btn-primary"
+                                                                                             id="back"
+                                                                                             th:href="@{'/'+${hotelId}+'/details/'}">Back</a>
+            </form>
+        </div>
+    </div>
+</div>

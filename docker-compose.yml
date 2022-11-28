@@ -1,0 +1,21 @@
+version: "3"
+services:
+  #  Create a service named db.
+  wp-db:
+    #   Use the Docker Image postgres. This will pull the newest release.
+    image: "postgres"
+    #   Give the container name.
+    container_name: "hotel"
+    #   Setup the username, password, and database name.
+    environment:
+      - POSTGRES_USER=hotelApp
+      - POSTGRES_PASSWORD=hoteApp123
+      - POSTGRES_DB=hotelApp
+    #   Maps port 5432 (localhost) to port 5432 on the container.
+    ports:
+      - "5432:5432"
+    #   Set a volume some that database is not lost after shutting down the container.
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+volumes:
+  postgres-data:

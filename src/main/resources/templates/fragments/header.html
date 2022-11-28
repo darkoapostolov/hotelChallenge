@@ -1,0 +1,39 @@
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">HOTEL APP</a>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarsExampleDefault">
+                <ul class="nav navbar-nav navbar-right">
+                    <!--Link to list of hotels-->
+                    <li class="nav-item m-auto">
+                        <a class="nav-link active" href="/">Hotels</a>
+                    </li>
+                    <!--Link to list of favorite hotels-->
+                    <li class="nav-item m-auto">
+                        <a class="nav-link active" href="/favorites">My Favorites</a>
+                    </li>
+                    <!--Displays username if authenticated-->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="#">
+                            <th:block th:if="${#request.getRemoteUser() != null}"
+                                      th:text="${#request.getRemoteUser()}"></th:block>
+                        </a>
+                    </li>
+                    <!--if authenticated displays logout link-->
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-light btn-sm ml-3" href="/logout">
+                            <i class="fa fa-shopping-cart"></i> Logout
+                        </a>
+                    </li>
+                    <!--if not authenticated displays login link-->
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="btn btn-light btn-sm ml-3" href="/login">
+                            <i class="fa fa-shopping-cart"></i> Login
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

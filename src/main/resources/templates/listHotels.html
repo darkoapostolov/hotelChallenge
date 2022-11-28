@@ -1,0 +1,178 @@
+<!--Page that lists hotels-->
+<style>
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        max-height: 150px;
+        image-resolution: initial;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+
+    ul {
+        list-style: none;
+        display: inline-grid;
+        grid-auto-columns: 300px;
+    }
+
+    h5 {
+        text-align: center;
+        font-size: 20px;
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
+    }
+
+    li {
+        padding-bottom: 5px;
+    }
+
+    .hotelBlock {
+        margin-top: 10%;
+        padding: 20px;
+        background: white;
+        margin-right: auto;
+        margin-left: auto;
+        border-radius: 15px;
+        box-shadow: 1px 1px 10px #0000001e;
+        width: 100%;
+        height: inherit;
+        transition: 0.7s ease-in;
+        max-height: 400px;
+    }
+
+    .hotelBlock:hover {
+        margin-top: 10%;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 1px 1px 30px #0000004e;
+    }
+
+    .buttonBlock {
+        display: flex;
+        margin-left: -15%;
+    }
+
+    .paragraph {
+        white-space: nowrap;
+        width: inherit;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #addButton {
+        margin-top: 2%;
+        width: inherit;
+        height: inherit;
+        padding: 5px;
+        border-radius: 15px;
+    }
+
+    #addButton > a {
+        text-decoration: none;
+    }
+
+    .hotelBlock > p {
+        font-size: 12px;
+    }
+</style>
+<div class="container mb-4">
+    <div class="row">
+        <div class="col-12">
+            <div>
+                <!--if user is admin add button is visible-->
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <button class="btn btn-primary" id="addButton">
+                        <a class="text-white" href="/addForm">Add Hotel</a>
+                    </button>
+                </th:block>
+                <br>
+                <!--search for hotels-->
+                <form>
+                    <div class="p-4">
+                        <div><h3>Search</h3></div>
+                        <b>Name: </b><input placeholder="Name" name="hotelName">
+                        <b>Address: </b> <input placeholder="Address" name="address">
+                        <input value="Filter" type="submit" id="filter" class="btn btn-dark">
+                    </div>
+                </form>
+                <!--list hotels-->
+                <ul th:each="hotel : ${hotels}">
+                    <li>
+                        <div class="hotelBlock">
+                            <!--hotel name-->
+                            <h5 class="bg-primary text-white" th:text="${hotel.getHotelName()}"></h5>
+                            <!--hotel image-->
+                            <img th:src="${hotel.getImage()}">
+                            <div class="paragraph">
+                                <!--hotel description-->
+                                <p class="text-secondary" th:text="${hotel.getDescription()}"></p>
+                            </div>
+                            <ul>
+                                <div class="buttonBlock">
+                                    <li>
+                                        <!--delete button is visible if user is admin-->
+                                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <form th:action="@{'/{id}/delete/' (id=${hotel.getId()})}"
+                                                  th:method="DELETE">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-danger">
+                                                    <i class="fa fa-trash">Delete</i>
+                                                </button>
+                                            </form>
+                                        </th:block>
+                                    </li>
+                                    <li>
+                                        <!--edit button is visible if user is admin-->
+                                        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                                            <a th:href="@{'/{id}/edit/' (id=${hotel.getId()})}"
+                                               class="btn btn-sm btn-warning">
+                                                <i class="fa fa-trash">Edit</i>
+                                            </a>
+                                        </th:block>
+                                    </li>
+                                    <li>
+                                        <!--details button-->
+                                        <th:block>
+                                            <a th:href="@{'/{id}/details/' (id=${hotel.getId()})}"
+                                               class="btn btn-sm btn-info">
+                                                <i class="fa fa-trash">Details</i>
+                                            </a>
+                                        </th:block>
+                                    </li>
+                                    <li>
+                                        <!--if hotel is not in favorites display button to add to favorites-->
+                                        <th:block
+                                                th:if="${!hotel.getUsersThatHaveHotelInFavorites().contains(#request.getRemoteUser())}">
+                                            <form th:action="@{'addHotelToFavorites/{id}/' (id=${hotel.getId()})}"
+                                                  th:method="POST">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-trash">Add Favorite</i>
+                                                </button>
+                                            </form>
+                                        </th:block>
+                                    </li>
+                                    <li>
+                                        <!--if hotel is in favorites display button to remove from favorites-->
+                                        <th:block
+                                                th:if="${hotel.getUsersThatHaveHotelInFavorites().contains(#request.getRemoteUser())}">
+                                            <form th:action="@{'/removeHotelFromFavorites/{id}/' (id=${hotel.getId()})}"
+                                                  th:method="POST">
+                                                <button type="submit"
+                                                        class="btn btn-sm btn-primary">
+                                                    <i class="fa fa-trash">Remove Favorite</i>
+                                                </button>
+                                            </form>
+                                        </th:block>
+                                    </li>
+                                </div>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,165 @@
+<!--details page-->
+<div xmlns:th="http://www.thymeleaf.org">
+    <style>
+        img {
+            height: 500px;
+        }
+
+        .reviews-list {
+            list-style: none;
+        }
+
+        .reviews {
+            box-shadow: 2px 5px 5px #888888;
+            width: 30%;
+            border: 1px solid gray;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .hr {
+            width: 70%;
+        }
+
+        .reviewButtons {
+            display: flex;
+        }
+
+        #detail {
+            text-align: left;
+            background-color: white;
+            border-radius: 20px;
+            border: 1px solid black;
+            padding: 20px;
+            width: 70%;
+            margin: auto;
+        }
+
+        .reviewLikes {
+            display: flex;
+        }
+    </style>
+    <section class="jumbotron text-center">
+        <div class="container">
+            <div class="text-left">
+                <a class="btn btn-primary" href="/">Back</a>
+            </div>
+            <!--hotel name-->
+            <h1 class="jumbotron-heading" th:text="${hotel.getHotelName()}"></h1>
+        </div>
+        <!--hotel image-->
+        <p><img th:src=" ${hotel.getImage()}"></p>
+        <div id="detail">
+            <b>Address: </b>
+            <p>
+                <!--displays address-->
+                <th:block th:text=" ${hotel.getAddress()}"></th:block>
+            </p>
+            <b>Geolocation: </b>
+            <p>
+                <!--displays geolocation-->
+                <th:block th:text=" ${hotel.getGeolocation()}"></th:block>
+            </p>
+            <b>Description: </b>
+            <p>
+                <!--displays description-->
+                <th:block th:text=" ${hotel.getDescription()}"></th:block>
+            </p>
+            <!--displays hotel ratings-->
+            <b>Rating:</b>
+            <p th:text=" ${rating}"></p>
+        </div>
+    </section>
+    <div class="container">
+        <!--button to add reviews-->
+        <form th:action="@{'/review/addReviewForm/{id}' (id=${hotel.getId()})}" method="GET">
+            <button class="btn btn-primary" type="submit">Add Review</button>
+        </form>
+        <ul class="reviews-list" th:each="review: ${reviews}">
+            <br>
+            <li>
+                <!--review author-->
+                <div class="h4" th:text="${review.getAuthor().getUsername()}"></div>
+                <div class="reviews">
+                    <!--review description-->
+                    <div th:text="${review.getDescription()}"></div>
+                    <hr class="hr">
+                    <!--review rating-->
+                    <b>Rating:</b>
+                    <div th:text="${review.getHotelRating()}"></div>
+                    <!--displays number of likes and dislikes-->
+                    <div class="reviewLikes"><b>Likes:</b>
+                        <p th:text="${review.getLikes().size()}"></p>&nbsp;&nbsp;&nbsp;&nbsp;<b>Dislikes:</b>
+                        <p th:text="${review.getDislikes().size()}"></p></div>
+                </div>
+                <div class="reviewButtons">
+                    <!--user can edit review if he is the author-->
+                    <div th:if="${#request.getRemoteUser()}==${review.getAuthor().getUsername()}">
+                        <form th:action="@{'/review/edit/'+${review.getId()}+'/'+${hotel.getId()}}"
+                              th:method="GET">
+                            <button type="submit"
+                                    class="btn btn-sm btn-warning">
+                                <i class="fa fa-trash">Edit</i>
+                            </button>
+                        </form>
+                    </div>
+                    <!--like button, if review is not liked or disliked it is displayed-->
+                    <th:block
+                            th:if="${!review.getUsersThatLiked().contains(#request.getRemoteUser()) && !review.getUsersThatDisliked().contains(#request.getRemoteUser())}">
+                        <form th:action="@{'/review/addLike/{id}/'+${hotel.getId()} (id=${review.getId()})}"
+                              th:method="POST">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                <i class="fa fa-trash">Like</i>
+                            </button>
+                        </form>
+                    </th:block>
+
+                    <!--remove like button, its displayed if there is a like-->
+                    <th:block th:if="${review.getUsersThatLiked().contains(#request.getRemoteUser())}">
+                        <form th:action="@{'/review/removeLike/{id}/'+${hotel.getId()} (id=${review.getId()})}"
+                              th:method="POST">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                <i class="fa fa-trash">Remove Like</i>
+                            </button>
+                        </form>
+                    </th:block>
+
+                    <!--dislike button, if review is not liked or disliked it is displayed-->
+                    <th:block
+                            th:if="${!review.getUsersThatDisliked().contains(#request.getRemoteUser()) && !review.getUsersThatLiked().contains(#request.getRemoteUser())}">
+                        <form th:action="@{'/review/addDislike/{id}/'+${hotel.getId()} (id=${review.getId()})}"
+                              th:method="POST">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash">Dislike</i>
+                            </button>
+                        </form>
+                    </th:block>
+
+                    <!--remove dislike button, its displayed if there is a dislike-->
+                    <th:block th:if="${review.getUsersThatDisliked().contains(#request.getRemoteUser())}">
+                        <form th:action="@{'/review/removeDislike/{id}/'+${hotel.getId()} (id=${review.getId()})}"
+                              th:method="POST">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash">Remove Dislike</i>
+                            </button>
+                        </form>
+                    </th:block>
+                </div>
+            </li>
+            <li>
+                <th:block>
+                    <!--link for list of users that have liked the review-->
+                    <a th:href="@{'/review/likedList/{id}/' (id=${review.getId()})}">(View Likes)</a>
+                </th:block>
+                <th:block>
+                    <!--link for list of users that have disliked the review-->
+                    <a th:href="@{'/review/dislikedList/{id}/' (id=${review.getId()})}">(View Dislikes)</a>
+                </th:block>
+            </li>
+        </ul>
+    </div>
+</div>
