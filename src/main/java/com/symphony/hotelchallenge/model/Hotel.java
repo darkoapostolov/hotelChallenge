@@ -22,7 +22,7 @@ public class Hotel {
     private String description;
     private String geolocation;
     private Double rating;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     // reviews located in the details section
     private List<Review> reviews;
     @ElementCollection

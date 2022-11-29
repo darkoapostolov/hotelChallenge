@@ -41,12 +41,13 @@ public class Review {
         this.author = author;
         // rating is an enumeration so it needs to be interpreted
         switch (rating) {
+            case ZERO -> this.hotelRating = 0.0;
             case ONE -> this.hotelRating = 1.0;
             case TWO -> this.hotelRating = 2.0;
             case THREE -> this.hotelRating = 3.0;
             case FOUR -> this.hotelRating = 4.0;
             case FIVE -> this.hotelRating = 5.0;
-            default -> this.hotelRating = 0.0;
+            default -> this.hotelRating = 0.00;
         }
         this.description = description;
         this.likes = new ArrayList<>();

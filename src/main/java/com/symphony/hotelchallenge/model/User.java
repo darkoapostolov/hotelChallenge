@@ -25,7 +25,7 @@ public class User implements UserDetails {
     @OneToMany
     private List<Review> reviews;
     // list of the users favorite hotels
-    @ManyToMany
+    @OneToMany
     private List<Hotel> favorites;
 
     // booleans for the implementation functions
