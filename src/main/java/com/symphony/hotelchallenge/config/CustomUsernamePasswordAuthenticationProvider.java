@@ -26,12 +26,14 @@ public class CustomUsernamePasswordAuthenticationProvider implements Authenticat
     // authentication method
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String username = authentication.getName();
+        String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        if ("".equals(username) || "".equals(password)) {
+        if ("".equals(email) || "".equals(password)) {
             throw new BadCredentialsException("Invalid Credentials");
         }
+
+        String username = userService.findByEmail(email).getUsername();
 
         UserDetails userDetails = this.userService.loadUserByUsername(username);
 

@@ -106,26 +106,28 @@ public class ReviewController {
     }
 
     // displays list of user usernames and emails of users that liked the review
-    @GetMapping("/likedList/{id}/")
-    public String viewLikes(Model model, @PathVariable Long id) throws InvalidReviewIdException {
+    @GetMapping("/likedList/{id}/{hotelId}")
+    public String viewLikes(Model model, @PathVariable Long id, @PathVariable Long hotelId) throws InvalidReviewIdException {
         Review review = reviewService.findById(id);
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < review.getLikes().size(); i++) {
             userList.add(review.getLikes().get(i).getUser());
         }
+        model.addAttribute("hotelId", hotelId);
         model.addAttribute("users", userList);
         model.addAttribute("bodyContent", "viewLikes");
         return "masterTemplate";
     }
 
     // displays list of user usernames and emails of users that disliked the review
-    @GetMapping("/dislikedList/{id}/")
-    public String viewDislikes(Model model, @PathVariable Long id) throws InvalidReviewIdException {
+    @GetMapping("/dislikedList/{id}/{hotelId}")
+    public String viewDislikes(Model model, @PathVariable Long id, @PathVariable Long hotelId) throws InvalidReviewIdException {
         Review review = reviewService.findById(id);
         List<User> userList = new ArrayList<>();
         for (int i = 0; i < review.getDislikes().size(); i++) {
             userList.add(review.getDislikes().get(i).getUser());
         }
+        model.addAttribute("hotelId", hotelId);
         model.addAttribute("users", userList);
         model.addAttribute("bodyContent", "viewDislikes");
         return "masterTemplate";

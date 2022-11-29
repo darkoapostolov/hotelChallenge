@@ -15,6 +15,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(unique = true)
     private String email;
     // only one user can have a certain username
     @Column(unique = true)

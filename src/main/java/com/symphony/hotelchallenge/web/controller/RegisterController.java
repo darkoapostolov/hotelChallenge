@@ -31,14 +31,17 @@ public class RegisterController {
     }
 
     // if the input passes the if statement registers new user and redirects to login,
-    // else brings the user back to the register form
+    // else brings the user back to the register form with an error message
     @PostMapping
     public String register(@RequestParam String email, @RequestParam String username, @RequestParam String password) {
-        if (userService.findByUsername(username) == null && password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}")) {
+        if (userService.findByUsername(username) == null &&
+                password.matches("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–{}:;',?/*~$^+=<>]).{8,20}") &&
+                userService.findByEmail(email) == null) {
             this.userService.register(email, username, password);
             return "redirect:/login";
         } else {
-            return "redirect:/register";
+            String error = "Credentials are either taken or invalid";
+            return "redirect:/register?error=" + error;
         }
     }
 }

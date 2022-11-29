@@ -75,6 +75,11 @@ public class UserServiceImpl implements UserService {
         return repository.findByUsername(username);
     }
 
+    @Override
+    public User findByEmail(String email) {
+        return repository.findUserByEmail(email);
+    }
+
     // registers user, creates new instance of User class
     @Override
     public User register(String email, String username, String password) {
@@ -86,7 +91,8 @@ public class UserServiceImpl implements UserService {
         return repository.save(user);
     }
 
-    // pretty much the same as find by username, used in authentication
+    // pretty much the same as findByUsername,
+    // it is required because the implemented interface extends UserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return (UserDetails) repository.findByUsername(username);

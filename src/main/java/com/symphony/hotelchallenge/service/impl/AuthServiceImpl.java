@@ -17,12 +17,14 @@ public class AuthServiceImpl implements AuthService {
         this.userRepository = userRepository;
     }
 
-    // login method
+    // login method, to enable login with email and password,
+    // the input string(the email) is used to find the username
     @Override
-    public User login(String username, String password) {
-        if (username == null || username.isEmpty() || password == null || password.isEmpty()) {
+    public User login(String email, String password) {
+        if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidArgumentsException();
         }
+        String username = userRepository.findUserByEmail(email).getUsername();
         return userRepository.findByUsernameAndPassword(username,
                 password);
     }

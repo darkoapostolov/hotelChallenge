@@ -23,5 +23,7 @@ public interface UserService extends UserDetailsService {
 
     User findByUsername(String username);
 
+    User findByEmail(String email);
+
     User register(String email, String username, String password);
 }

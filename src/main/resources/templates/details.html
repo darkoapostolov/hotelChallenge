@@ -153,11 +153,12 @@
             <li>
                 <th:block>
                     <!--link for list of users that have liked the review-->
-                    <a th:href="@{'/review/likedList/{id}/' (id=${review.getId()})}">(View Likes)</a>
+                    <a th:href="@{'/review/likedList/{id}/'+${hotel.getId()} (id=${review.getId()})}">(View Likes)</a>
                 </th:block>
                 <th:block>
                     <!--link for list of users that have disliked the review-->
-                    <a th:href="@{'/review/dislikedList/{id}/' (id=${review.getId()})}">(View Dislikes)</a>
+                    <a th:href="@{'/review/dislikedList/{id}/'+${hotel.getId()} (id=${review.getId()})}">(View
+                        Dislikes)</a>
                 </th:block>
             </li>
         </ul>
